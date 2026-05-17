@@ -31,10 +31,6 @@ public final class Navigation {
         primaryStage.setMinHeight(MIN_HEIGHT);
     }
 
-    public static void showDatabaseSetup() {
-        show("database-setup.fxml", "/com/markbaengine/styles/screens/database-setup.css");
-    }
-
     public static void showDashboard() {
         show("dashboard.fxml", "/com/markbaengine/styles/screens/dashboard.css");
     }
