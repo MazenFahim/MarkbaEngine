@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.markbaengine.controller.ReportsController" styleClass="admin-root">
+    <left>
+        <VBox prefWidth="216" spacing="10" styleClass="sidebar">
+            <padding>
+                <Insets top="18" right="14" bottom="18" left="14"/>
+            </padding>
+            <Button text="← Dashboard" maxWidth="Infinity" onAction="#openDashboard" styleClass="nav-button"/>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <Button text="Vehicles" maxWidth="Infinity" onAction="#openVehicles" styleClass="nav-button"/>
+            <Button text="Vehicle Models" maxWidth="Infinity" onAction="#openModels" styleClass="nav-button"/>
+            <Button text="Depots / Workshops" maxWidth="Infinity" onAction="#openDepots" styleClass="nav-button"/>
+            <Button text="Mechanics" maxWidth="Infinity" onAction="#openMechanics" styleClass="nav-button"/>
+            <Button text="Fuel Types" maxWidth="Infinity" onAction="#openSuppliers" styleClass="nav-button"/>
+            <Button text="Spare Parts" maxWidth="Infinity" onAction="#openSpareParts" styleClass="nav-button"/>
+            <Button text="Maintenance Logs" maxWidth="Infinity" onAction="#openMaintenance" styleClass="nav-button"/>
+            <Button text="Part Usage" maxWidth="Infinity" onAction="#openPartUsage" styleClass="nav-button"/>
+            <Button text="Reports / Joins" maxWidth="Infinity" onAction="#openReports">
+                <styleClass>
+                    <String fx:value="nav-button"/>
+                    <String fx:value="nav-button-active"/>
+                </styleClass>
+            </Button>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <VBox spacing="3" styleClass="sidebar-footer">
+                <Label text="Report workspace" styleClass="sidebar-footer-title"/>
+                <Label text="SQL joins and summaries" styleClass="sidebar-footer-text"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="18" styleClass="workspace">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+
+            <VBox spacing="5" styleClass="page-heading">
+                <Label text="Reports / SQL Joins" styleClass="page-title"/>
+                <Label text="Run predefined reports that prove SELECT queries and JOIN relationships between related tables."
+                       styleClass="page-subtitle" wrapText="true"/>
+            </VBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="content-card report-toolbar-card">
+                 <Label text="Report" styleClass="form-field-label"/>
+                 <ComboBox fx:id="reportComboBox" minWidth="280" prefWidth="360" maxWidth="520" HBox.hgrow="ALWAYS" styleClass="report-combo"/>
+                 <Button text="Run Report" onAction="#handleRunReport">
+                     <styleClass>
+                         <String fx:value="action-button"/>
+                         <String fx:value="action-add"/>
+                     </styleClass>
+                 </Button>
+                 <Pane HBox.hgrow="ALWAYS"/>
+                 <Label fx:id="resultCountLabel" text="0 rows" styleClass="card-count"/>
+             </HBox>
+
+            <VBox spacing="12" VBox.vgrow="ALWAYS" styleClass="content-card report-results-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Report Results" styleClass="card-title"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
+                    <placeholder>
+                        <Label text="Select a report and click Run Report." styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,27 @@
+.data-table {
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: -glass-border-10;
+}
+
+.table-view {
+    -fx-background-color: rgba(255,255,255,0.95);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -color-slate-200;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -color-slate-900;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -color-sky-200;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: -color-slate-900;
+}
+

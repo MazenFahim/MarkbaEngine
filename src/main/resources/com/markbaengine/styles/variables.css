@@ -1,0 +1,52 @@
+.root {
+    -app-font-family: "Segoe UI", "Arial", sans-serif;
+
+    -font-size-xs: 11px;
+    -font-size-sm: 12px;
+    -font-size-base: 13px;
+    -font-size-md: 14px;
+    -font-size-lg: 16px;
+    -font-size-xl: 18px;
+    -font-size-2xl: 22px;
+    -font-size-3xl: 26px;
+
+    -color-white: white;
+    -color-gray-200: #e5e7eb;
+    -color-slate-100: #f1f5f9;
+    -color-slate-200: #e2e8f0;
+    -color-slate-300: #cbd5e1;
+    -color-slate-400: #94a3b8;
+    -color-slate-600: #64748b;
+    -color-slate-700: #1e293b;
+    -color-slate-800: #111827;
+    -color-slate-900: #0f172a;
+
+    -color-sky-200: #bae6fd;
+    -color-sky-400: #38bdf8;
+    -color-sky-500: #0ea5e9;
+    -color-sky-600: #0284c7;
+    -color-blue-500: #3b82f6;
+    -color-blue-600: #2563eb;
+    -color-green-500: #22c55e;
+    -color-green-600: #16a34a;
+    -color-red-500: #ef4444;
+    -color-red-600: #dc2626;
+
+    -color-forest-600: #15803d;
+    -color-forest-700: #166534;
+    -color-brown-700: #78350f;
+    -color-brown-800: #451a03;
+
+    -color-ink-900: #0c1829;
+
+    -color-sky-500-15: rgba(14,165,233,0.15);
+    -glass-bg-08: rgba(255,255,255,0.08);
+    -glass-border-10: rgba(255,255,255,0.10);
+    -glass-border-12: rgba(255,255,255,0.12);
+
+    -radius-sm: 10;
+    -radius-md: 12;
+    -radius-lg: 16;
+    -radius-xl: 18;
+}
+

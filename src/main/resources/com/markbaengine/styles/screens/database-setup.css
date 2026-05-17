@@ -1,0 +1,352 @@
+/* ═══════════════════════════════════════════════════════════════
+ *  DATABASE SETUP PAGE — stable compact workspace redesign v3 brand fix
+ * ═══════════════════════════════════════════════════════════════ */
+
+.setup-root {
+    -fx-background-color: #071326;
+}
+
+.bg-scene {
+    -fx-background-color: transparent;
+}
+
+.scene-sky-bg {
+    -fx-fill: linear-gradient(to bottom right, #06152a 0%, #08213f 48%, #0a2b4a 100%);
+}
+
+.landscape-band {
+    -fx-fill: linear-gradient(to right, rgba(21,128,61,0.18), rgba(34,197,94,0.26), rgba(21,128,61,0.16));
+    -fx-opacity: 0.72;
+}
+
+.road-band {
+    -fx-fill: linear-gradient(to bottom, rgba(15,23,42,0.66), rgba(2,6,23,0.95));
+}
+
+.road-edge,
+.road-edge-soft {
+    -fx-stroke: rgba(96,165,250,0.22);
+    -fx-stroke-width: 2;
+}
+
+.moving-lane-line {
+    -fx-stroke: rgba(226,232,240,0.24);
+    -fx-stroke-width: 5;
+    -fx-stroke-line-cap: round;
+}
+
+.wind-line-soft {
+    -fx-stroke: rgba(147,197,253,0.16);
+    -fx-stroke-width: 1.7;
+    -fx-stroke-line-cap: round;
+}
+
+.wind-line-bright {
+    -fx-stroke: rgba(186,230,253,0.36);
+    -fx-stroke-width: 2.1;
+    -fx-stroke-line-cap: round;
+}
+
+.tree-crown,
+.tree-crown-soft,
+.simple-house,
+.simple-house-soft,
+.tree-trunk,
+.house-window {
+    -fx-opacity: 0.18;
+}
+
+.tree-crown { -fx-fill: #22c55e; }
+.tree-crown-soft { -fx-fill: #15803d; }
+.tree-trunk { -fx-fill: #92400e; }
+.simple-house,
+.simple-house-soft { -fx-fill: #78350f; }
+.house-window { -fx-fill: #38bdf8; }
+.house-roof,
+.house-roof-soft {
+    -fx-stroke: rgba(120,53,15,0.24);
+    -fx-stroke-width: 5;
+    -fx-stroke-line-cap: round;
+}
+
+.setup-panel {
+    -fx-background-color: linear-gradient(to bottom right, rgba(8,20,39,0.97), rgba(9,28,53,0.95));
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-border-color: rgba(59,130,246,0.56);
+    -fx-border-width: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.48), 30, 0.22, 0, 14);
+}
+
+.setup-brand-row {
+    -fx-alignment: center-left;
+    -fx-padding: 0 2 0 2;
+}
+
+.setup-brand-mark {
+    -fx-background-color: linear-gradient(to bottom right, #3b82f6, #0ea5e9);
+    -fx-background-radius: 9;
+    -fx-effect: dropshadow(gaussian, rgba(14,165,233,0.32), 10, 0.18, 0, 2);
+}
+
+.setup-brand-mark-text {
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+    -fx-font-weight: 900;
+}
+
+.setup-brand-name {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+
+.setup-hero {
+    -fx-padding: 0 2 2 2;
+}
+
+.setup-db-icon {
+    -fx-background-color: linear-gradient(to bottom right, rgba(59,130,246,0.24), rgba(14,165,233,0.14));
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(96,165,250,0.28);
+    -fx-border-radius: 16;
+}
+
+.setup-db-icon-text {
+    -fx-text-fill: #93c5fd;
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+.setup-title {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+}
+
+.setup-subtitle {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 15px;
+}
+
+.setup-choice-row {
+    -fx-alignment: CENTER;
+}
+
+.setup-choice-card {
+    -fx-min-height: 126px;
+    -fx-pref-height: 126px;
+    -fx-background-color: rgba(255,255,255,0.055);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(148,163,184,0.18);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+}
+
+.setup-choice-card-primary {
+    -fx-background-color: linear-gradient(to bottom right, rgba(30,64,175,0.26), rgba(14,165,233,0.10));
+    -fx-border-color: rgba(59,130,246,0.82);
+}
+
+.setup-choice-title {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 16px;
+    -fx-font-weight: 900;
+}
+
+.setup-choice-copy {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 2px;
+}
+
+.setup-action-primary,
+.setup-action-secondary,
+.setup-browse-button {
+    -fx-min-height: 36px;
+    -fx-pref-height: 36px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-weight: 800;
+    -fx-cursor: hand;
+}
+
+.setup-action-primary {
+    -fx-background-color: linear-gradient(to right, #2563eb, #0ea5e9);
+    -fx-text-fill: white;
+}
+
+.setup-action-primary:hover {
+    -fx-background-color: linear-gradient(to right, #1d4ed8, #0284c7);
+}
+
+.setup-action-secondary {
+    -fx-background-color: linear-gradient(to right, #16a34a, #22c55e);
+    -fx-text-fill: white;
+}
+
+.setup-action-secondary:hover {
+    -fx-background-color: linear-gradient(to right, #15803d, #16a34a);
+}
+
+.setup-section-card {
+    -fx-background-color: rgba(255,255,255,0.060);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(148,163,184,0.18);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+}
+
+.setup-section-title {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 16px;
+    -fx-font-weight: 900;
+}
+
+.setup-browse-button {
+    -fx-padding: 0 18 0 18;
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-border-color: rgba(148,163,184,0.22);
+    -fx-text-fill: #e2e8f0;
+}
+
+.setup-browse-button:hover {
+    -fx-background-color: rgba(59,130,246,0.16);
+    -fx-border-color: rgba(96,165,250,0.55);
+}
+
+.setup-file-field {
+    -fx-min-height: 38px;
+    -fx-padding: 0 14 0 14;
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: #bfdbfe;
+    -fx-font-size: 13px;
+    -fx-background-color: rgba(2,6,23,0.38);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(96,165,250,0.12);
+    -fx-border-radius: 10;
+}
+
+.setup-status-panel {
+    -fx-background-color: linear-gradient(to bottom right, rgba(37,99,235,0.12), rgba(14,165,233,0.06));
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(59,130,246,0.34);
+    -fx-border-radius: 14;
+}
+
+.setup-status-title {
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 13px;
+    -fx-font-weight: 900;
+}
+
+.workspace-path-label {
+    -fx-text-fill: #dbeafe;
+    -fx-font-size: 12px;
+}
+
+.setup-validation-box {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 12px;
+    -fx-font-family: -app-font-family;
+    -fx-control-inner-background: rgba(2,6,23,0.24);
+    -fx-padding: 0;
+}
+
+.setup-validation-box .content {
+    -fx-background-color: rgba(2,6,23,0.24);
+    -fx-background-radius: 10;
+}
+
+.setup-validation-box .scroll-pane,
+.setup-validation-box .viewport {
+    -fx-background-color: transparent;
+}
+
+.setup-required-card {
+    -fx-padding: 0;
+}
+
+.setup-count-badge {
+    -fx-padding: 4 12 4 12;
+    -fx-background-color: rgba(34,197,94,0.14);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(34,197,94,0.24);
+    -fx-border-radius: 999;
+    -fx-text-fill: #86efac;
+    -fx-font-size: 12px;
+    -fx-font-weight: 900;
+}
+
+.required-tables-summary {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 11px;
+}
+
+.required-chip-row {
+    -fx-padding: 0;
+}
+
+.required-chip {
+    -fx-padding: 5 10 5 10;
+    -fx-background-color: rgba(15,23,42,0.72);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(148,163,184,0.16);
+    -fx-border-radius: 8;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 12px;
+}
+
+.setup-continue-btn {
+    -fx-min-height: 42px;
+    -fx-pref-height: 42px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 900;
+    -fx-background-color: linear-gradient(to right, #2563eb, #0ea5e9);
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-cursor: hand;
+}
+
+.setup-continue-btn:hover {
+    -fx-background-color: linear-gradient(to right, #1d4ed8, #0284c7);
+}
+
+.setup-continue-btn:disabled {
+    -fx-background-color: rgba(255,255,255,0.075);
+    -fx-text-fill: rgba(148,163,184,0.42);
+    -fx-cursor: default;
+}
+
+.setup-footer-row {
+    -fx-padding: 0 0 0 0;
+}
+
+.setup-footer-text {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+.setup-demo-link {
+    -fx-min-height: 30px;
+    -fx-padding: 0 12 0 12;
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(148,163,184,0.16);
+    -fx-border-radius: 999;
+    -fx-text-fill: #bfdbfe;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+    -fx-cursor: hand;
+}
+
+.setup-demo-link:hover {
+    -fx-background-color: rgba(59,130,246,0.15);
+    -fx-border-color: rgba(96,165,250,0.40);
+    -fx-text-fill: #eff6ff;
+}

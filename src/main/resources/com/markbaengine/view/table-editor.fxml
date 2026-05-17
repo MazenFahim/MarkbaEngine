@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.markbaengine.controller.TableEditorController" styleClass="admin-root">
+    <left>
+        <VBox prefWidth="216" spacing="10" styleClass="sidebar">
+            <padding>
+                <Insets top="18" right="14" bottom="18" left="14"/>
+            </padding>
+            <Button text="← Dashboard" maxWidth="Infinity" onAction="#openDashboard" styleClass="nav-button"/>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <Button fx:id="navVehicles" text="Vehicles" maxWidth="Infinity" onAction="#openVehicles" styleClass="nav-button"/>
+            <Button fx:id="navModels" text="Vehicle Models" maxWidth="Infinity" onAction="#openModels" styleClass="nav-button"/>
+            <Button fx:id="navDepots" text="Depots / Workshops" maxWidth="Infinity" onAction="#openDepots" styleClass="nav-button"/>
+            <Button fx:id="navMechanics" text="Mechanics" maxWidth="Infinity" onAction="#openMechanics" styleClass="nav-button"/>
+            <Button fx:id="navSuppliers" text="Fuel Types" maxWidth="Infinity" onAction="#openSuppliers" styleClass="nav-button"/>
+            <Button fx:id="navSpareParts" text="Spare Parts" maxWidth="Infinity" onAction="#openSpareParts" styleClass="nav-button"/>
+            <Button fx:id="navMaintenance" text="Maintenance Logs" maxWidth="Infinity" onAction="#openMaintenance" styleClass="nav-button"/>
+            <Button fx:id="navPartUsage" text="Part Usage" maxWidth="Infinity" onAction="#openPartUsage" styleClass="nav-button"/>
+            <Button text="Reports / Joins" maxWidth="Infinity" onAction="#openReports" styleClass="nav-button"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <VBox spacing="3" styleClass="sidebar-footer">
+                <Label text="Active workspace" styleClass="sidebar-footer-title"/>
+                <Label text="CRUD editor" styleClass="sidebar-footer-text"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="18" styleClass="workspace">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="page-toolbar">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label fx:id="titleLabel" text="Table" styleClass="page-title"/>
+                        <Label fx:id="selectedIdLabel" text="No row selected" styleClass="status-chip"/>
+                    </HBox>
+                    <Label text="Search, review, add, update, or delete records in the selected table."
+                           styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="search-row">
+                <TextField fx:id="searchField" promptText="Search visible records..." onKeyReleased="#handleSearch"
+                           HBox.hgrow="ALWAYS" styleClass="search-field"/>
+                <Button text="Refresh" onAction="#handleRefresh" styleClass="refresh-button"/>
+            </HBox>
+
+            <HBox spacing="18" VBox.vgrow="ALWAYS" styleClass="editor-main-row">
+                <VBox spacing="12" minWidth="0" HBox.hgrow="ALWAYS" styleClass="content-card">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Records" styleClass="card-title"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="recordCountLabel" text="0 records" styleClass="card-count"/>
+                    </HBox>
+                    <TableView fx:id="dataTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
+                        <placeholder>
+                            <Label text="No records found." styleClass="table-placeholder"/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <VBox minWidth="360" prefWidth="380" maxWidth="420" spacing="12" styleClass="content-card record-form-card">
+                    <VBox spacing="5">
+                        <Label text="Record Form" styleClass="card-title"/>
+                        <Label text="Select a row to edit it, or fill the form and click Add."
+                               wrapText="true" styleClass="card-helper"/>
+                    </VBox>
+
+                    <Separator styleClass="soft-separator"/>
+
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                VBox.vgrow="ALWAYS" styleClass="form-scroll">
+                        <content>
+                            <GridPane fx:id="formGrid" hgap="14" vgap="12" styleClass="record-form-grid">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="130" prefWidth="145" maxWidth="165"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+                            </GridPane>
+                        </content>
+                    </ScrollPane>
+
+                    <Separator styleClass="soft-separator"/>
+
+                    <VBox spacing="10" styleClass="action-stack">
+                        <Button text="Add" onAction="#handleAdd" maxWidth="Infinity">
+                            <styleClass>
+                                <String fx:value="action-button"/>
+                                <String fx:value="action-add"/>
+                            </styleClass>
+                        </Button>
+                        <Button fx:id="updateButton" text="Update Selected" onAction="#handleUpdate" maxWidth="Infinity" disable="true">
+                            <styleClass>
+                                <String fx:value="action-button"/>
+                                <String fx:value="action-update"/>
+                            </styleClass>
+                        </Button>
+                        <Button fx:id="deleteButton" text="Delete Selected" onAction="#handleDelete" maxWidth="Infinity" disable="true">
+                            <styleClass>
+                                <String fx:value="action-button"/>
+                                <String fx:value="action-delete"/>
+                            </styleClass>
+                        </Button>
+                        <Button text="Clear Form" onAction="#handleClear" maxWidth="Infinity">
+                            <styleClass>
+                                <String fx:value="action-button"/>
+                                <String fx:value="action-clear"/>
+                            </styleClass>
+                        </Button>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

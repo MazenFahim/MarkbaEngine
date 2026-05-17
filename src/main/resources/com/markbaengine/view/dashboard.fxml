@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.markbaengine.controller.DashboardController" styleClass="admin-root">
+    <left>
+        <VBox prefWidth="216" spacing="10" styleClass="sidebar">
+            <padding>
+                <Insets top="18" right="14" bottom="18" left="14"/>
+            </padding>
+            <Button text="← Dashboard" maxWidth="Infinity" onAction="#openDashboard">
+                <styleClass>
+                    <String fx:value="nav-button"/>
+                    <String fx:value="nav-button-active"/>
+                </styleClass>
+            </Button>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <Button text="Vehicles" maxWidth="Infinity" onAction="#openVehicles" styleClass="nav-button"/>
+            <Button text="Vehicle Models" maxWidth="Infinity" onAction="#openModels" styleClass="nav-button"/>
+            <Button text="Depots / Workshops" maxWidth="Infinity" onAction="#openDepots" styleClass="nav-button"/>
+            <Button text="Mechanics" maxWidth="Infinity" onAction="#openMechanics" styleClass="nav-button"/>
+            <Button text="Fuel Types" maxWidth="Infinity" onAction="#openSuppliers" styleClass="nav-button"/>
+            <Button text="Spare Parts" maxWidth="Infinity" onAction="#openSpareParts" styleClass="nav-button"/>
+            <Button text="Maintenance Logs" maxWidth="Infinity" onAction="#openMaintenance" styleClass="nav-button"/>
+            <Button text="Part Usage" maxWidth="Infinity" onAction="#openPartUsage" styleClass="nav-button"/>
+            <Button text="Reports / Joins" maxWidth="Infinity" onAction="#openReports" styleClass="nav-button"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <VBox spacing="3" styleClass="sidebar-footer">
+                <Label text="Fleet database manager" styleClass="sidebar-footer-title"/>
+                <Label fx:id="welcomeLabel" text="Ready" styleClass="sidebar-footer-text"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="22" styleClass="workspace">
+            <padding>
+                <Insets top="28" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <VBox spacing="8" styleClass="page-heading">
+                <Label text="Dashboard" styleClass="page-title"/>
+                <Label text="Manage vehicles, depots, maintenance operations, spare parts, and reports from one clean workspace."
+                       styleClass="page-subtitle" wrapText="true"/>
+            </VBox>
+
+            <FlowPane hgap="18" vgap="18" prefWrapLength="900" styleClass="dashboard-grid">
+                <Button text="" onAction="#openVehicles">
+                     <styleClass>
+                         <String fx:value="dashboard-card"/>
+                         <String fx:value="dashboard-card-primary"/>
+                     </styleClass>
+                     <graphic>
+                         <VBox alignment="CENTER_LEFT" spacing="4">
+                             <Label text="Vehicles" styleClass="dashboard-card-title"/>
+                             <Label text="Manage vehicle records" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                         </VBox>
+                     </graphic>
+                 </Button>
+                <Button text="" onAction="#openModels" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Vehicle Models" styleClass="dashboard-card-title"/>
+                            <Label text="Model catalog and specs" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openDepots" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Depots / Workshops" styleClass="dashboard-card-title"/>
+                            <Label text="Locations and service points" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openMechanics" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Mechanics" styleClass="dashboard-card-title"/>
+                            <Label text="Maintenance staff records" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openSuppliers" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Fuel Types" styleClass="dashboard-card-title"/>
+                            <Label text="Supplier directory" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openSpareParts" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Spare Parts" styleClass="dashboard-card-title"/>
+                            <Label text="Inventory items" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openMaintenance" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Maintenance Logs" styleClass="dashboard-card-title"/>
+                            <Label text="Service history" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openPartUsage" styleClass="dashboard-card">
+                    <graphic>
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Part Usage" styleClass="dashboard-card-title"/>
+                            <Label text="Parts used by maintenance" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+                <Button text="" onAction="#openReports">
+                     <styleClass>
+                         <String fx:value="dashboard-card"/>
+                         <String fx:value="dashboard-card-accent"/>
+                     </styleClass>
+                     <graphic>
+                         <VBox alignment="CENTER_LEFT" spacing="4">
+                             <Label text="Reports / Joins" styleClass="dashboard-card-title"/>
+                             <Label text="Run SQL reports" styleClass="dashboard-card-subtitle" wrapText="true"/>
+                         </VBox>
+                     </graphic>
+                 </Button>
+             </FlowPane>
+        </VBox>
+    </center>
+</BorderPane>
