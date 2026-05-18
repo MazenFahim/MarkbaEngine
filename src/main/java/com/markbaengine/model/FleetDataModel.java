@@ -1,12 +1,12 @@
-package com.markbaengine.service;
+package com.markbaengine.model;
 
-import com.markbaengine.dao.GenericCrudDao;
-import com.markbaengine.model.CrudColumn;
-import com.markbaengine.model.TableConfig;
-
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.markbaengine.model.CrudColumn.ControlType.DATE;
 import static com.markbaengine.model.CrudColumn.ControlType.DECIMAL;
@@ -15,48 +15,98 @@ import static com.markbaengine.model.CrudColumn.ControlType.INTEGER;
 import static com.markbaengine.model.CrudColumn.ControlType.LOOKUP;
 import static com.markbaengine.model.CrudColumn.ControlType.TEXT;
 
-public class CrudService {
-    private final GenericCrudDao genericCrudDao = new GenericCrudDao();
-    private final Map<String, TableConfig> configs = new LinkedHashMap<>();
+/**
+ * MVC Model for the editable database tables.
+ *
+ * This class replaced the old Service + DAO split. It has two jobs:
+ * 1. Store the table definitions used by the UI.
+ * 2. Execute SELECT, INSERT, UPDATE, DELETE for the selected table.
+ */
+public class FleetDataModel {
+    private final Map<String, TableConfig> tables = new LinkedHashMap<>();
 
-    public CrudService() {
-        registerConfigs();
+    public FleetDataModel() {
+        registerTables();
     }
 
-    public TableConfig getConfig(String key) {
-        TableConfig config = configs.get(key);
-        if (config == null) {
+    public TableConfig getTable(String key) {
+        TableConfig table = tables.get(key);
+        if (table == null) {
             throw new IllegalArgumentException("Unknown table key: " + key);
         }
-        return config;
+        return table;
     }
 
-    public List<Map<String, Object>> findAll(TableConfig config) {
-        return genericCrudDao.findAll(config);
+    public List<Map<String, Object>> selectAll(TableConfig table) {
+        return Database.selectRows(table.getSelectSql());
     }
 
-    public void insert(TableConfig config, Map<String, Object> values) {
-        validate(config, values);
-        genericCrudDao.insert(config, values);
+    public void insert(TableConfig table, Map<String, Object> values) {
+        validateRequiredFields(table, values);
+
+        List<CrudColumn> columns = table.getEditableColumns();
+        String columnNames = columns.stream().map(CrudColumn::getName).collect(Collectors.joining(", "));
+        String placeholders = columns.stream().map(column -> "?").collect(Collectors.joining(", "));
+
+        String sql = "INSERT INTO " + table.getTableName()
+                + " (" + columnNames + ") VALUES (" + placeholders + ")";
+
+        Database.executeUpdate(sql, valuesFor(columns, values));
     }
 
-    public void update(TableConfig config, Object primaryKeyValue, Map<String, Object> values) {
+    public void update(TableConfig table, Object primaryKeyValue, Map<String, Object> values) {
         if (primaryKeyValue == null) {
             throw new IllegalArgumentException("Select a row first.");
         }
-        validate(config, values);
-        genericCrudDao.update(config, primaryKeyValue, values);
+        validateRequiredFields(table, values);
+
+        List<CrudColumn> columns = table.getEditableColumns().stream()
+                .filter(column -> !column.isPrimaryKey())
+                .toList();
+
+        String setClause = columns.stream()
+                .map(column -> column.getName() + " = ?")
+                .collect(Collectors.joining(", "));
+
+        String sql = "UPDATE " + table.getTableName()
+                + " SET " + setClause
+                + " WHERE " + table.getPrimaryKeyColumn() + " = ?";
+
+        Object[] parameters = valuesFor(columns, values);
+        Object[] parametersWithPrimaryKey = new Object[parameters.length + 1];
+        System.arraycopy(parameters, 0, parametersWithPrimaryKey, 0, parameters.length);
+        parametersWithPrimaryKey[parameters.length] = primaryKeyValue;
+
+        Database.executeUpdate(sql, parametersWithPrimaryKey);
     }
 
-    public void delete(TableConfig config, Object primaryKeyValue) {
+    public void delete(TableConfig table, Object primaryKeyValue) {
         if (primaryKeyValue == null) {
             throw new IllegalArgumentException("Select a row first.");
         }
-        genericCrudDao.delete(config, primaryKeyValue);
+
+        String sql = "DELETE FROM " + table.getTableName()
+                + " WHERE " + table.getPrimaryKeyColumn() + " = ?";
+
+        Database.executeUpdate(sql, primaryKeyValue);
     }
 
-    private void validate(TableConfig config, Map<String, Object> values) {
-        for (CrudColumn column : config.getEditableColumns()) {
+    public List<LookupOption> lookupOptions(String tableName, String idColumn, String labelColumn) {
+        String sql = "SELECT "
+                + idColumn + " AS lookup_id, "
+                + labelColumn + " AS lookup_label "
+                + "FROM " + tableName + " "
+                + "ORDER BY lookup_label";
+
+        List<LookupOption> options = new ArrayList<>();
+        for (Map<String, Object> row : Database.selectRows(sql)) {
+            options.add(new LookupOption(row.get("lookup_id"), String.valueOf(row.get("lookup_label"))));
+        }
+        return options;
+    }
+
+    private void validateRequiredFields(TableConfig table, Map<String, Object> values) {
+        for (CrudColumn column : table.getEditableColumns()) {
             Object value = values.get(column.getName());
             if (column.isRequired() && (value == null || value.toString().isBlank())) {
                 throw new IllegalArgumentException(column.getLabel() + " is required.");
@@ -64,8 +114,17 @@ public class CrudService {
         }
     }
 
-    private void registerConfigs() {
-        configs.put("vehicles", new TableConfig(
+    private Object[] valuesFor(List<CrudColumn> columns, Map<String, Object> values) {
+        Object[] parameters = new Object[columns.size()];
+        for (int i = 0; i < columns.size(); i++) {
+            Object value = values.get(columns.get(i).getName());
+            parameters[i] = value instanceof LocalDate localDate ? Date.valueOf(localDate) : value;
+        }
+        return parameters;
+    }
+
+    private void registerTables() {
+        tables.put("vehicles", new TableConfig(
                 "vehicles",
                 "Vehicles",
                 "Vehicle",
@@ -107,7 +166,7 @@ public class CrudService {
                 )
         ));
 
-        configs.put("models", new TableConfig(
+        tables.put("models", new TableConfig(
                 "models",
                 "Vehicle Models",
                 "VehicleModel",
@@ -121,7 +180,7 @@ public class CrudService {
                 )
         ));
 
-        configs.put("depots", new TableConfig(
+        tables.put("depots", new TableConfig(
                 "depots",
                 "Depots / Workshops",
                 "Depot",
@@ -135,7 +194,7 @@ public class CrudService {
                 )
         ));
 
-        configs.put("mechanics", new TableConfig(
+        tables.put("mechanics", new TableConfig(
                 "mechanics",
                 "Mechanics",
                 "Mechanic",
@@ -163,8 +222,8 @@ public class CrudService {
                 )
         ));
 
-        configs.put("suppliers", new TableConfig(
-                "suppliers",
+        tables.put("fuel_types", new TableConfig(
+                "fuel_types",
                 "Fuel Types",
                 "FuelType",
                 "fuelType_id",
@@ -176,7 +235,7 @@ public class CrudService {
                 )
         ));
 
-        configs.put("spare_parts", new TableConfig(
+        tables.put("spare_parts", new TableConfig(
                 "spare_parts",
                 "Spare Parts",
                 "Spare_Part",
@@ -190,7 +249,7 @@ public class CrudService {
                 )
         ));
 
-        configs.put("maintenance", new TableConfig(
+        tables.put("maintenance", new TableConfig(
                 "maintenance",
                 "Maintenance Logs",
                 "Maintenance_Log",
@@ -230,7 +289,7 @@ public class CrudService {
                 )
         ));
 
-        configs.put("part_usage", new TableConfig(
+        tables.put("part_usage", new TableConfig(
                 "part_usage",
                 "Part Usage",
                 "Usage_ID",

@@ -1,12 +1,15 @@
-package com.markbaengine.util;
+package com.markbaengine.controller;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
-public final class AlertUtil {
-    private AlertUtil() {
+/**
+ * Small controller helper for user messages.
+ */
+public final class DialogController {
+    private DialogController() {
     }
 
     public static void info(String title, String message) {

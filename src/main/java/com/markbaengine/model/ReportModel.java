@@ -1,17 +1,18 @@
-package com.markbaengine.service;
-
-import com.markbaengine.dao.ReportDao;
-import com.markbaengine.model.ReportDefinition;
+package com.markbaengine.model;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReportService {
-    private final ReportDao reportDao = new ReportDao();
+/**
+ * MVC Model for the six inquiry reports.
+ *
+ * Each ReportDefinition contains the report title and the SQL SELECT query.
+ */
+public class ReportModel {
     private final Map<String, ReportDefinition> reports = new LinkedHashMap<>();
 
-    public ReportService() {
+    public ReportModel() {
         reports.put("model_max_logs_last_month", new ReportDefinition(
                 "model_max_logs_last_month",
                 "Inquiry 1: Vehicle Model With Maximum Maintenance Logs Last Month",
@@ -192,6 +193,6 @@ public class ReportService {
     }
 
     public List<Map<String, Object>> runReport(ReportDefinition reportDefinition) {
-        return reportDao.runReport(reportDefinition);
+        return Database.selectRows(reportDefinition.getSql());
     }
 }

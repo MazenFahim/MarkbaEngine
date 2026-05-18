@@ -1,12 +1,9 @@
 package com.markbaengine.controller;
 
-import com.markbaengine.dao.LookupDao;
 import com.markbaengine.model.CrudColumn;
+import com.markbaengine.model.FleetDataModel;
 import com.markbaengine.model.LookupOption;
 import com.markbaengine.model.TableConfig;
-import com.markbaengine.service.CrudService;
-import com.markbaengine.util.AlertUtil;
-import com.markbaengine.util.Navigation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -32,6 +29,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * MVC Controller for table-editor.fxml.
+ *
+ * This is the only controller used for all CRUD tables. It does not know the
+ * schema by itself. It asks FleetDataModel for the selected TableConfig.
+ */
 public class TableEditorController {
     @FXML private Label titleLabel;
     @FXML private Label selectedIdLabel;
@@ -53,16 +56,19 @@ public class TableEditorController {
 
     private static final String ACTIVE_NAV_CLASS = "nav-button-active";
 
-    private final CrudService crudService = new CrudService();
-    private final LookupDao lookupDao = new LookupDao();
+    private final FleetDataModel model = new FleetDataModel();
     private final Map<String, Node> inputControls = new HashMap<>();
 
-    private TableConfig config;
+    private TableConfig table;
     private List<Map<String, Object>> currentRows = new ArrayList<>();
 
+    /**
+     * Called by ScreenNavigator when the user opens a table.
+     * Example: loadTable("vehicles") loads the Vehicle table definition.
+     */
     public void loadTable(String tableKey) {
-        config = crudService.getConfig(tableKey);
-        titleLabel.setText(config.getTitle());
+        table = model.getTable(tableKey);
+        titleLabel.setText(table.getTitle());
         markActiveNavigation(tableKey);
         buildTableColumns();
         buildForm();
@@ -70,16 +76,16 @@ public class TableEditorController {
         refreshTable();
     }
 
-    @FXML private void openDashboard() { Navigation.showDashboard(); }
-    @FXML private void openVehicles() { Navigation.showTableEditor("vehicles"); }
-    @FXML private void openModels() { Navigation.showTableEditor("models"); }
-    @FXML private void openDepots() { Navigation.showTableEditor("depots"); }
-    @FXML private void openMechanics() { Navigation.showTableEditor("mechanics"); }
-    @FXML private void openSuppliers() { Navigation.showTableEditor("suppliers"); }
-    @FXML private void openSpareParts() { Navigation.showTableEditor("spare_parts"); }
-    @FXML private void openMaintenance() { Navigation.showTableEditor("maintenance"); }
-    @FXML private void openPartUsage() { Navigation.showTableEditor("part_usage"); }
-    @FXML private void openReports() { Navigation.showReports(); }
+    @FXML private void openDashboard() { ScreenNavigator.showDashboard(); }
+    @FXML private void openVehicles() { openTable("vehicles"); }
+    @FXML private void openModels() { openTable("models"); }
+    @FXML private void openDepots() { openTable("depots"); }
+    @FXML private void openMechanics() { openTable("mechanics"); }
+    @FXML private void openSuppliers() { openTable("fuel_types"); }
+    @FXML private void openSpareParts() { openTable("spare_parts"); }
+    @FXML private void openMaintenance() { openTable("maintenance"); }
+    @FXML private void openPartUsage() { openTable("part_usage"); }
+    @FXML private void openReports() { ScreenNavigator.showReports(); }
 
     @FXML
     private void handleRefresh() {
@@ -94,6 +100,7 @@ public class TableEditorController {
             updateRecordCount(currentRows.size());
             return;
         }
+
         List<Map<String, Object>> filtered = currentRows.stream()
                 .filter(row -> row.values().stream()
                         .filter(Objects::nonNull)
@@ -101,6 +108,7 @@ public class TableEditorController {
                         .map(String::toLowerCase)
                         .anyMatch(value -> value.contains(query)))
                 .toList();
+
         dataTable.setItems(FXCollections.observableArrayList(filtered));
         updateRecordCount(filtered.size());
     }
@@ -108,45 +116,49 @@ public class TableEditorController {
     @FXML
     private void handleAdd() {
         try {
-            crudService.insert(config, readFormValues());
-            AlertUtil.info("Inserted", "Record inserted successfully.");
+            model.insert(table, readFormValues());
+            DialogController.info("Inserted", "Record inserted successfully.");
             refreshTable();
             clearForm();
         } catch (RuntimeException ex) {
-            AlertUtil.error("Insert failed", rootMessage(ex));
+            DialogController.error("Insert failed", rootMessage(ex));
         }
     }
 
     @FXML
     private void handleUpdate() {
         try {
-            Map<String, Object> row = dataTable.getSelectionModel().getSelectedItem();
-            Object primaryKeyValue = row == null ? null : row.get(config.getPrimaryKeyColumn());
-            crudService.update(config, primaryKeyValue, readFormValues());
-            AlertUtil.info("Updated", "Record updated successfully.");
+            Map<String, Object> selectedRow = dataTable.getSelectionModel().getSelectedItem();
+            Object primaryKeyValue = selectedRow == null ? null : selectedRow.get(table.getPrimaryKeyColumn());
+
+            model.update(table, primaryKeyValue, readFormValues());
+            DialogController.info("Updated", "Record updated successfully.");
             refreshTable();
         } catch (RuntimeException ex) {
-            AlertUtil.error("Update failed", rootMessage(ex));
+            DialogController.error("Update failed", rootMessage(ex));
         }
     }
 
     @FXML
     private void handleDelete() {
         try {
-            Map<String, Object> row = dataTable.getSelectionModel().getSelectedItem();
-            Object primaryKeyValue = row == null ? null : row.get(config.getPrimaryKeyColumn());
+            Map<String, Object> selectedRow = dataTable.getSelectionModel().getSelectedItem();
+            Object primaryKeyValue = selectedRow == null ? null : selectedRow.get(table.getPrimaryKeyColumn());
+
             if (primaryKeyValue == null) {
                 throw new IllegalArgumentException("Select a row first.");
             }
-            if (!AlertUtil.confirm("Delete record", "Are you sure you want to delete the selected record?")) {
+
+            if (!DialogController.confirm("Delete record", "Are you sure you want to delete the selected record?")) {
                 return;
             }
-            crudService.delete(config, primaryKeyValue);
-            AlertUtil.info("Deleted", "Record deleted successfully.");
+
+            model.delete(table, primaryKeyValue);
+            DialogController.info("Deleted", "Record deleted successfully.");
             refreshTable();
             clearForm();
         } catch (RuntimeException ex) {
-            AlertUtil.error("Delete failed", rootMessage(ex));
+            DialogController.error("Delete failed", rootMessage(ex));
         }
     }
 
@@ -155,10 +167,15 @@ public class TableEditorController {
         clearForm();
     }
 
+    private void openTable(String tableKey) {
+        ScreenNavigator.showTableEditor(tableKey);
+    }
+
     private void buildTableColumns() {
         dataTable.getColumns().clear();
         dataTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        for (CrudColumn column : config.getColumns()) {
+
+        for (CrudColumn column : table.getColumns()) {
             TableColumn<Map<String, Object>, String> tableColumn = new TableColumn<>(column.getLabel());
             tableColumn.setCellValueFactory(cellData -> {
                 Object value = cellData.getValue().get(column.getName());
@@ -191,7 +208,7 @@ public class TableEditorController {
         inputControls.clear();
 
         int row = 0;
-        for (CrudColumn column : config.getColumns()) {
+        for (CrudColumn column : table.getColumns()) {
             if (!column.isEditable() || column.isGenerated()) {
                 continue;
             }
@@ -221,7 +238,7 @@ public class TableEditorController {
             case LOOKUP -> {
                 ComboBox<LookupOption> comboBox = new ComboBox<>();
                 comboBox.setItems(FXCollections.observableArrayList(
-                        lookupDao.getOptions(column.getLookupTable(), column.getLookupIdColumn(), column.getLookupLabelColumn())
+                        model.lookupOptions(column.getLookupTable(), column.getLookupIdColumn(), column.getLookupLabelColumn())
                 ));
                 comboBox.setMaxWidth(Double.MAX_VALUE);
                 yield comboBox;
@@ -254,7 +271,7 @@ public class TableEditorController {
                 deleteButton.setDisable(true);
                 return;
             }
-            selectedIdLabel.setText("Selected ID: " + selectedRow.get(config.getPrimaryKeyColumn()));
+            selectedIdLabel.setText("Selected ID: " + selectedRow.get(table.getPrimaryKeyColumn()));
             updateButton.setDisable(false);
             deleteButton.setDisable(false);
             fillForm(selectedRow);
@@ -262,7 +279,7 @@ public class TableEditorController {
     }
 
     private void refreshTable() {
-        currentRows = crudService.findAll(config);
+        currentRows = model.selectAll(table);
         dataTable.setItems(FXCollections.observableArrayList(currentRows));
         searchField.clear();
         selectedIdLabel.setText("No row selected");
@@ -272,18 +289,14 @@ public class TableEditorController {
     }
 
     private void updateRecordCount(int count) {
-        if (recordCountLabel == null) {
-            return;
+        if (recordCountLabel != null) {
+            recordCountLabel.setText(count + (count == 1 ? " record" : " records"));
         }
-        recordCountLabel.setText(count + (count == 1 ? " record" : " records"));
     }
 
     private Map<String, Object> readFormValues() {
         Map<String, Object> values = new HashMap<>();
-        for (CrudColumn column : config.getEditableColumns()) {
-            if (column.isGenerated()) {
-                continue;
-            }
+        for (CrudColumn column : table.getEditableColumns()) {
             Node input = inputControls.get(column.getName());
             values.put(column.getName(), readValue(column, input));
         }
@@ -317,10 +330,7 @@ public class TableEditorController {
 
     @SuppressWarnings("unchecked")
     private void fillForm(Map<String, Object> row) {
-        for (CrudColumn column : config.getEditableColumns()) {
-            if (column.isGenerated()) {
-                continue;
-            }
+        for (CrudColumn column : table.getEditableColumns()) {
             Node input = inputControls.get(column.getName());
             Object value = row.get(column.getName());
 
@@ -351,6 +361,7 @@ public class TableEditorController {
         selectedIdLabel.setText("No row selected");
         updateButton.setDisable(true);
         deleteButton.setDisable(true);
+
         for (Node input : inputControls.values()) {
             if (input instanceof TextField textField) {
                 textField.clear();
@@ -367,7 +378,7 @@ public class TableEditorController {
         setActive(navModels, "models".equals(tableKey));
         setActive(navDepots, "depots".equals(tableKey));
         setActive(navMechanics, "mechanics".equals(tableKey));
-        setActive(navSuppliers, "suppliers".equals(tableKey));
+        setActive(navSuppliers, "fuel_types".equals(tableKey));
         setActive(navSpareParts, "spare_parts".equals(tableKey));
         setActive(navMaintenance, "maintenance".equals(tableKey));
         setActive(navPartUsage, "part_usage".equals(tableKey));

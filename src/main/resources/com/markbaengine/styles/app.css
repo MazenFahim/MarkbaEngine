@@ -55,7 +55,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
  *  Custom undecorated window chrome
- *  Used by Navigation.java to replace the native OS title bar.
+ *  Used by ScreenNavigator.java for shared window styling.
  * ═══════════════════════════════════════════════════════════════ */
 .window-frame {
     -fx-background-color: #f8fafc;
