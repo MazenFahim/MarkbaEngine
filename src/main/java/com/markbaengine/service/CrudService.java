@@ -23,10 +23,6 @@ public class CrudService {
         registerConfigs();
     }
 
-    public List<TableConfig> getTableConfigs() {
-        return List.copyOf(configs.values());
-    }
-
     public TableConfig getConfig(String key) {
         TableConfig config = configs.get(key);
         if (config == null) {
@@ -40,7 +36,7 @@ public class CrudService {
     }
 
     public void insert(TableConfig config, Map<String, Object> values) {
-        validate(config, values, false);
+        validate(config, values);
         genericCrudDao.insert(config, values);
     }
 
@@ -48,7 +44,7 @@ public class CrudService {
         if (primaryKeyValue == null) {
             throw new IllegalArgumentException("Select a row first.");
         }
-        validate(config, values, true);
+        validate(config, values);
         genericCrudDao.update(config, primaryKeyValue, values);
     }
 
@@ -59,7 +55,7 @@ public class CrudService {
         genericCrudDao.delete(config, primaryKeyValue);
     }
 
-    private void validate(TableConfig config, Map<String, Object> values, boolean update) {
+    private void validate(TableConfig config, Map<String, Object> values) {
         for (CrudColumn column : config.getEditableColumns()) {
             Object value = values.get(column.getName());
             if (column.isRequired() && (value == null || value.toString().isBlank())) {
@@ -167,12 +163,6 @@ public class CrudService {
                 )
         ));
 
-        /*
-         * Temporary compatibility:
-         * The old dashboard still has a "Suppliers" button.
-         * Since Supplier is no longer part of the final ERD, this key now opens FuelType.
-         * Later we will rename the UI button from "Suppliers" to "Fuel Types".
-         */
         configs.put("suppliers", new TableConfig(
                 "suppliers",
                 "Fuel Types",
