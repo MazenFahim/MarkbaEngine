@@ -70,7 +70,6 @@ public class TableEditorController {
         refreshTable();
     }
 
-    @FXML private void handleBack() { Navigation.showDashboard(); }
     @FXML private void openDashboard() { Navigation.showDashboard(); }
     @FXML private void openVehicles() { Navigation.showTableEditor("vehicles"); }
     @FXML private void openModels() { Navigation.showTableEditor("models"); }
@@ -239,11 +238,10 @@ public class TableEditorController {
             }
         };
 
-        if (control instanceof Region region) {
-            region.setMaxWidth(Double.MAX_VALUE);
-            region.setMinHeight(38);
-            region.setPrefHeight(38);
-        }
+        Region region = (Region) control;
+        region.setMaxWidth(Double.MAX_VALUE);
+        region.setMinHeight(38);
+        region.setPrefHeight(38);
         control.getStyleClass().add("form-control");
         return control;
     }
@@ -292,7 +290,6 @@ public class TableEditorController {
         return values;
     }
 
-    @SuppressWarnings("unchecked")
     private Object readValue(CrudColumn column, Node input) {
         if (input instanceof TextField textField) {
             String text = textField.getText() == null ? "" : textField.getText().trim();
